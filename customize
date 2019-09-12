@@ -1,0 +1,26 @@
+#!/usr/bin/bash
+
+PATH=/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin
+
+# Exit if any commands fail
+set -o errexit
+
+echo "* Build mattermost";
+GOFLAGS=''
+git clone https://github.com/mattermost/mattermost-server.git
+# env GOOS=solaris GOARCH=amd64 /opt/local/bin/go install -i $(GOFLAGS) ./...
+# cp go/bin/blogspam-api /opt/local/bin/blogspam-api
+
+echo "* Setup mattermost user and group"
+groupadd -g 1100 mattermost
+useradd -m -s /usr/bin/bash -d /nonexistent -u 1100 -g mattermost mattermost
+passwd -N mattermost
+passwd -d mattermost
+
+# Clean up
+echo "* Cleaning up."
+rm /root/customize
+rm -rf /root/mattermost
+
+# Prepare image for provisioning
+sm-prepare-image -y
