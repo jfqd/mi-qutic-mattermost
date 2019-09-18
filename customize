@@ -19,8 +19,9 @@ git clone https://github.com/mattermost/mattermost-server.git
 cd /home/mattermost/mattermost-server/vendor/github.com/fsnotify/fsnotify/
 patch -t -N < /opt/local/patches/fen.go.patch 2>&1 1>/dev/null || true
 cd /home/mattermost/mattermost-server
+export GOPATH=/home/mattermost/go
 env GOOS=solaris GOARCH=amd64 /opt/local/bin/go install ./...
-cp ../go/bin/* /opt/local/bin/
+cp /home/mattermost/go/bin/* /opt/local/bin/
 
 echo "* Include mattermost webapp";
 cd /home/mattermost
