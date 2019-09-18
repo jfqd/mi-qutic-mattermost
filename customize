@@ -16,9 +16,9 @@ passwd -d mattermost
 echo "* Build mattermost server";
 cd /home/mattermost
 git clone https://github.com/mattermost/mattermost-server.git
-cd mattermost-server/vendor/github.com/fsnotify/fsnotify/
+cd /home/mattermost/mattermost-server/vendor/github.com/fsnotify/fsnotify/
 patch -t -N < /opt/local/patches/fen.go.patch 2>&1 1>/dev/null || true
-cd mattermost-server
+cd /home/mattermost/mattermost-server
 env GOOS=solaris GOARCH=amd64 /opt/local/bin/go install ./...
 cp ../go/bin/* /opt/local/bin/
 
@@ -26,22 +26,24 @@ echo "* Include mattermost webapp";
 cd /home/mattermost
 curl -s -L -O "https://download.qutic.com/src/mattermost/mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz"
 tar xf mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz
-ln -nfs /home/mattermost/client /home/mattermost/mattermost-server/client
-
-echo "* Setup user and group rights for mattermost";
-chown -R mattermost:mattermost /home/mattermost
+mkdir -p /home/mattermost/mattermost/data
+mkdir -p /home/mattermost/mattermost/client/plugins
 
 echo "* Setup mattermost config";
-mkdir -p /home/mattermost/mattermost-server/config
-OUTPUT_CONFIG=/home/mattermost/mattermost-server/config/config.json config_generator
+mv /home/mattermost/mattermost/config/config.json /home/mattermost/mattermost/config/config.json.bak
+OUTPUT_CONFIG=/home/mattermost/mattermost/config/config.json config_generator
 
-echo "* Config need to be writable by mattermost"
-chown -R mattermost:mattermost /opt/local/etc/mattermost
+echo "* Setup user and group rights for mattermost";
+chown -R mattermost:mattermost /home/mattermost/mattermost
 
 # Clean up
 echo "* Cleaning up."
 rm /root/customize
-rm /opt/local/patches
+rm -rf  /opt/local/patches
+rm -rf /home/mattermost/mattermost-server
+rm -rf /home/mattermost/mattermost/bin
+rm -rf /home/mattermost/mattermost/prepackaged_plugins/*
+rm /home/mattermost/mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz
 
 # Prepare image for provisioning
 sm-prepare-image -y
