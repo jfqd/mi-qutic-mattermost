@@ -5,22 +5,40 @@ PATH=/opt/local/gnu/bin:/opt/local/bin:/opt/local/sbin:/usr/bin:/usr/sbin
 # Exit if any commands fail
 set -o errexit
 
-echo "* Build mattermost";
-GOFLAGS=''
-git clone https://github.com/mattermost/mattermost-server.git
-# env GOOS=solaris GOARCH=amd64 /opt/local/bin/go install -i $(GOFLAGS) ./...
-# cp go/bin/blogspam-api /opt/local/bin/blogspam-api
+MATTERMOST_VERSION="5.15.0"
 
 echo "* Setup mattermost user and group"
 groupadd -g 1100 mattermost
-useradd -m -s /usr/bin/bash -d /nonexistent -u 1100 -g mattermost mattermost
+useradd -m -s /usr/bin/bash -d /home/mattermost -u 1100 -g mattermost mattermost
 passwd -N mattermost
 passwd -d mattermost
+
+echo "* Build mattermost server";
+cd /home/mattermost
+git clone https://github.com/mattermost/mattermost-server.git
+cd mattermost-server
+env GOOS=solaris GOARCH=amd64 /opt/local/bin/go install ./...
+cp ../go/bin/* /opt/local/bin/
+
+echo "* Include mattermost webapp";
+cd /home/mattermost
+curl -s -L -O "https://download.qutic.com/src/mattermost/mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz"
+tar xf mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz
+ln -nfs /home/mattermost/client /home/mattermost/mattermost-server/client
+
+echo "* Setup user and group rights for mattermost";
+chown -R mattermost:mattermost /home/mattermost
+
+echo "* Setup mattermost config";
+mkdir -p /home/mattermost/mattermost-server/config
+OUTPUT_CONFIG=/home/mattermost/mattermost-server/config/config.json config_generator
+
+echo "* Config need to be writable by mattermost"
+chown -R mattermost:mattermost /opt/local/etc/mattermost
 
 # Clean up
 echo "* Cleaning up."
 rm /root/customize
-rm -rf /root/mattermost
 
 # Prepare image for provisioning
 sm-prepare-image -y
