@@ -16,7 +16,7 @@
     </dependency>
     
     <exec_method name='start' type='method' exec='/opt/local/lib/svc/method/mattermost' timeout_seconds='60'>
-      <method_context>
+      <method_context working_directory="/home/mattermost/mattermost">
         <method_credential user='mattermost' group='mattermost' />
         <method_environment>
           <envvar name='PATH' value='/opt/local/sbin:/opt/local/bin:/usr/sbin:/usr/bin:/sbin'/>

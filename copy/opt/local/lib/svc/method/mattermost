@@ -1,7 +1,7 @@
 #!/usr/bin/bash
 
 export GOPATH=/home/mattermost/go
-cd /home/mattermost/mattermost-server
-/opt/local/bin/mattermost server -c /opt/local/etc/mattermost/config.json 2>&1 &
+cd /home/mattermost/mattermost
+/opt/local/bin/mattermost server -c /home/mattermost/mattermost/config/config.json 2>&1 &
 
 exit 0
