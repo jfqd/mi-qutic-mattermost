@@ -12,7 +12,7 @@
       <service_fmri value='svc:/system/filesystem/local'/>
     </dependency>
     <dependency name='config-file' grouping='require_all' restart_on='refresh' type='path'>
-        <service_fmri value='file://localhost/opt/local/etc/mattermost/config.json' />
+        <service_fmri value='file://localhost/home/mattermost/mattermost/config/config.json' />
     </dependency>
     
     <exec_method name='start' type='method' exec='/opt/local/lib/svc/method/mattermost' timeout_seconds='60'>
