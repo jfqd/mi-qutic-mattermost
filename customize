@@ -48,5 +48,7 @@ rm -rf /home/mattermost/mattermost/bin
 rm -rf /home/mattermost/mattermost/prepackaged_plugins/*
 rm /home/mattermost/mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz
 
+pkgin -y rm gcc7 go gmake patch
+
 # Prepare image for provisioning
 sm-prepare-image -y
