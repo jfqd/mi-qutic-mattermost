@@ -1,5 +1,6 @@
 git-base
 go
+gcc7
 nginx
 nodejs
 npm
