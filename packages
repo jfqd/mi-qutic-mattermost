@@ -5,4 +5,4 @@ nodejs
 npm
 gmake
 patch
-percona-server-8
+percona-server-8.0.18
