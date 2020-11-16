@@ -7,6 +7,9 @@ set -o errexit
 
 MATTERMOST_VERSION="5.29.0"
 
+echo "* Setup tmpdir for illumos"
+export TMPDIR=/var/tmp
+
 echo "* Setup mattermost user and group"
 groupadd -g 1100 mattermost
 useradd -m -s /usr/bin/bash -d /home/mattermost -u 1100 -g mattermost mattermost
