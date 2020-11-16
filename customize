@@ -25,6 +25,8 @@ cp /home/mattermost/go/bin/* /opt/local/bin/
 
 echo "* Include mattermost webapp";
 cd /home/mattermost
+# get team-version (not the enterprise-version!) from here:
+# https://github.com/mattermost/docs/blob/master/source/administration/version-archive.rst
 curl -s -L -O "https://download.qutic.com/src/mattermost/mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz"
 tar xf mattermost-team-$MATTERMOST_VERSION-linux-amd64.tar.gz
 mkdir -p /home/mattermost/mattermost/data
